@@ -3,7 +3,6 @@ __pycache__/
 *.pyo
 *.pth
 data/
-results/*.png
 results/*.npy
 results/*.csv
 .DS_Store

@@ -154,7 +154,13 @@ Tüm modeller CIFAR-10 test seti (10.000 örnek) üzerinde değerlendirilmiştir
 | truck | 0.82 | 0.66 | 0.73 |
 | **Genel** | **0.67** | **0.66** | **0.65** |
 
+#### Grafikler
+
+![Model 1 – Loss ve Accuracy Eğrileri](results/Model1_LeNet5_curves.png)
+
 #### Karmaşıklık Matrisi
+
+![Model 1 – Confusion Matrix](results/Model1_LeNet5_cm.png)
 
 | Gerçek \ Tahmin | airplane | automobile | bird | cat | deer | dog | frog | horse | ship | truck |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -214,6 +220,12 @@ Tüm modeller CIFAR-10 test seti (10.000 örnek) üzerinde değerlendirilmiştir
 | **ship** | 59 | 58 | 17 | 29 | 2 | 4 | 7 | 3 | **777** | 44 |
 | **truck** | 21 | 115 | 6 | 31 | 3 | 3 | 13 | 10 | 55 | **743** |
 
+#### Grafikler
+
+![Model 2 – Loss ve Accuracy Eğrileri](results/Model2_Improved_curves.png)
+
+![Model 2 – Confusion Matrix](results/Model2_Improved_cm.png)
+
 ---
 
 ### Model 3 – ResNet-18 (Pretrained, Fine-Tuning)
@@ -256,6 +268,12 @@ Tüm modeller CIFAR-10 test seti (10.000 örnek) üzerinde değerlendirilmiştir
 | **horse** | 4 | 0 | 3 | 5 | 12 | 23 | 0 | **951** | 1 | 1 |
 | **ship** | 25 | 3 | 2 | 0 | 2 | 0 | 2 | 0 | **963** | 3 |
 | **truck** | 6 | 30 | 1 | 4 | 0 | 0 | 0 | 0 | 12 | **947** |
+
+#### Grafikler
+
+![Model 3 – Loss ve Accuracy Eğrileri](results/Model3_ResNet18_curves.png)
+
+![Model 3 – Confusion Matrix](results/Model3_ResNet18_cm.png)
 
 ---
 
@@ -300,6 +318,10 @@ Tüm modeller CIFAR-10 test seti (10.000 örnek) üzerinde değerlendirilmiştir
 | **horse** | 4 | 0 | 4 | 12 | 13 | 13 | 0 | **952** | 1 | 1 |
 | **ship** | 22 | 3 | 4 | 0 | 0 | 0 | 1 | 0 | **964** | 6 |
 | **truck** | 7 | 26 | 1 | 4 | 0 | 0 | 0 | 0 | 9 | **953** |
+
+#### Grafik
+
+![Model 4 – SVM Confusion Matrix](results/Model4_SVM_cm.png)
 
 ---
 
