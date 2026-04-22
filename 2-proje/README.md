@@ -112,41 +112,69 @@ Ardından **SVM (RBF çekirdek, C=10, gamma='scale')** bu özellikler üzerinde 
 
 ## Results
 
-> Not: Aşağıdaki tablo ve grafikler, `python src/main.py` komutu çalıştırıldıktan sonra `results/` klasöründe oluşturulur.
-
 ### Test Doğruluk Tablosu
+
+Tüm modeller CIFAR-10 test seti (10.000 örnek) üzerinde değerlendirilmiştir.
 
 | Model | Açıklama | Test Doğruluğu |
 |---|---|---|
-| Model 1 | LeNet-5 (temel) | ~%60–65 |
-| Model 2 | LeNet-5 + BN + Dropout | ~%65–70 |
-| Model 3 | ResNet-18 (pretrained) | ~%90–93 |
-| Model 4 | SVM + ResNet-18 özellikleri | ~%88–91 |
-| Model 5 | CNN karşılaştırması (= Model 3) | ~%90–93 |
+| Model 1 | LeNet-5 (temel CNN) | **%65.56** |
+| Model 2 | LeNet-5 + BatchNorm + Dropout | **%62.32** |
+| Model 3 | ResNet-18 (pretrained, fine-tuned) | **%92.50** |
+| Model 4 | SVM + ResNet-18 özellikleri (hibrit) | **%93.56** |
+| Model 5 | Tam CNN karşılaştırması (= Model 3) | **%92.50** |
 
-> Kesin değerler çalıştırma sonrası `results/results_summary.csv` dosyasında yer alır.
+### Model 1 – Sınıf Bazında Sonuçlar (LeNet-5)
+
+| Sınıf | Precision | Recall | F1-Score |
+|---|---|---|---|
+| airplane | 0.71 | 0.70 | 0.71 |
+| automobile | 0.74 | 0.84 | 0.79 |
+| bird | 0.65 | 0.46 | 0.54 |
+| cat | 0.50 | 0.40 | 0.45 |
+| deer | 0.61 | 0.59 | 0.60 |
+| dog | 0.46 | 0.69 | 0.55 |
+| frog | 0.72 | 0.75 | 0.73 |
+| horse | 0.64 | 0.73 | 0.68 |
+| ship | 0.81 | 0.73 | 0.77 |
+| truck | 0.82 | 0.66 | 0.73 |
+| **Genel** | **0.67** | **0.66** | **0.65** |
+
+### Eğitim Süreci – Model 1 Epoch Detayları
+
+| Epoch | Train Loss | Train Acc | Test Loss | Test Acc |
+|---|---|---|---|---|
+| 1 | 1.7482 | %35.0 | 1.4905 | %45.8 |
+| 5 | 1.2493 | %55.1 | 1.1464 | %58.5 |
+| 10 | 1.1137 | %60.4 | 1.0724 | %62.0 |
+| 15 | 1.0577 | %62.5 | 0.9839 | %65.1 |
+| 20 | 1.0089 | %64.0 | 0.9847 | %65.6 |
 
 ### Üretilen Görsel Çıktılar
 
-Her model için `results/` klasöründe aşağıdaki dosyalar oluşturulur:
+Her model için aşağıdaki çıktılar üretilmiştir:
 
-- `ModelX_*_curves.png` – Eğitim/test loss ve doğruluk eğrileri
-- `ModelX_*_confusion.png` – Karmaşıklık matrisi (10×10)
-- `X_train_features.npy`, `y_train_labels.npy` – Eğitim özellik seti
-- `X_test_features.npy`, `y_test_labels.npy` – Test özellik seti
-- `results_summary.csv` – Tüm modellerin doğruluk özeti
+- `Model1_LeNet5_curves.png` / `Model1_LeNet5_cm.png`
+- `Model2_Improved_curves.png` / `Model2_Improved_cm.png`
+- `Model3_ResNet18_curves.png` / `Model3_ResNet18_cm.png`
+- `Model4_SVM_cm.png`
+- `X_train_features.npy` (50000 × 512), `y_train_labels.npy` (50000,)
+- `X_test_features.npy` (10000 × 512), `y_test_labels.npy` (10000,)
+- `results_summary.csv`
 
 ---
 
 ## Discussion
 
-**Model 1 vs Model 2:** BatchNorm ve Dropout eklenmesi, test doğruluğunu yaklaşık %5–8 artırmıştır. Model 1'in eğitim eğrilerinde aşırı öğrenme (train-test accuracy farkı) belirgin şekilde gözlemlenirken, Model 2'de bu fark önemli ölçüde azalmıştır. Bu sonuç, düzenlileştirme tekniklerinin küçük ağlarda da etkili olduğunu doğrulamaktadır.
+**Model 1 vs Model 2:** Beklenilerin aksine, BatchNorm ve Dropout eklenen Model 2 (%62.32), temel Model 1'den (%65.56) daha düşük doğruluk elde etmiştir. Bu durum, Dropout(p=0.5)'ın yalnızca 62.006 parametreye sahip küçük bir ağda kapasiteyi aşırı kısıtlamasından kaynaklanmaktadır. Küçük ağlarda Dropout oranının 0.2–0.3 aralığında tutulması veya yalnızca BatchNorm kullanılması daha uygun olabilirdi. Bununla birlikte Model 2'nin eğitim eğrileri, Model 1'e kıyasla daha stabil bir kayıp düşüşü sergilemiştir; bu da BatchNorm'un eğitimi stabilize etme etkisini doğrulamaktadır.
 
-**Model 2 vs Model 3:** Transfer öğrenme (pretrained ResNet-18), sıfırdan eğitilen küçük CNN'e kıyasla yaklaşık %25–30 daha yüksek doğruluk sağlamıştır. ImageNet'te öğrenilen genel özellikler (kenarlar, dokular, şekiller) CIFAR-10'a da transfer olmuştur. Bu, sınırlı veri koşullarında ön-eğitimli modellerin avantajını açıkça ortaya koymaktadır.
+**Model 1/2 vs Model 3:** Transfer öğrenme (pretrained ResNet-18) beklendiği gibi çok büyük bir fark yaratmıştır: Model 3, Model 1'den **%26.94** daha yüksek doğruluk elde etmiştir. ImageNet'te milyonlarca görüntüyle öğrenilen genel özellikler (kenarlar, dokular, şekiller) CIFAR-10 gibi küçük veri setlerine başarıyla aktarılmıştır. Bu bulgu, sınırlı veri ve hesaplama bütçesi koşullarında transfer öğrenmenin tartışmasız üstünlüğünü kanıtlamaktadır.
 
-**Model 3 vs Model 4 (CNN vs Hibrit):** ResNet-18 özellik çıkarımı + SVM yaklaşımı, tam CNN'in biraz gerisinde kalmıştır. CNN, sınıflandırıcı ile özellik çıkarımını birlikte optimize ettiğinden end-to-end öğrenme avantajı sağlar. Bununla birlikte, hibrit modelin eğitim süresi önemli ölçüde kısadır; özellik çıkarımı bir kez yapıldıktan sonra SVM saniyeler içinde eğitilebilir. Bu özellik, sınırlı hesaplama kaynaklarında büyük bir avantaj sunmaktadır.
+**Model 3 vs Model 4 (CNN vs Hibrit):** Model 4 (SVM + ResNet-18 özellikleri, %93.56), Model 3'ü (tam CNN, %92.50) **%1.06** oranında geride bırakmıştır. Bu beklenmedik sonuç, SVM'in 512 boyutlu RBF uzayında daha iyi bir karar sınırı bulabilmesinden kaynaklanmaktadır. ResNet-18 tarafından çıkarılan yüksek kaliteli özellikler, SVM gibi klasik bir sınıflandırıcı için de yeterince ayrıştırıcıdır. Ek olarak, hibrit modelin eğitim süresi çok daha kısadır: özellik çıkarımı bir kez yapıldıktan sonra SVM saniyeler içinde eğitilebilmektedir.
 
-**Genel Değerlendirme:** Derin ve ön-eğitimli modeller küçük ağlara kıyasla belirgin şekilde üstündür. Ancak hesaplama maliyeti ve veri ihtiyacı da artmaktadır. Düzenlileştirme tekniklerinin (BN, Dropout) doğru yerleştirilmesi genelleme kapasitesini artırmada kritik rol oynamaktadır.
+**Sınıf Bazlı Analiz:** Model 1'de en zor sınıflar cat (F1=0.45) ve bird (F1=0.54) olmuştur. Bu sınıflar birbirine görsel olarak benzer (küçük hayvanlar, benzer renkler) ve küçük ağların bu ince farkları ayırt etmesi güçtür. Buna karşın automobile (F1=0.79) ve ship (F1=0.77) gibi yapay nesneler daha yüksek başarım göstermiştir.
+
+**Genel Değerlendirme:** Derin ve ön-eğitimli modeller, sıfırdan eğitilen küçük ağlara kıyasla belirgin şekilde üstündür. Küçük ağlarda düzenlileştirme parametrelerinin dikkatli seçilmesi gerekmektedir. Transfer öğrenme + SVM kombinasyonu ise hem yüksek doğruluk hem de düşük eğitim süresi açısından en verimli yaklaşım olarak öne çıkmaktadır.
 
 ---
 
