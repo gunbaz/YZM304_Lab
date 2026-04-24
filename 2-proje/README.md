@@ -1,5 +1,7 @@
 # YZM304 Derin Öğrenme – II. Proje: CNN ile Özellik Çıkarma ve Sınıflandırma
 
+> **Not:** Proje teslim tarihi itibarıyla görsel grafikler (loss/accuracy eğrileri ve confusion matrix PNG dosyaları) bilgisayar arızası nedeniyle depoya eklenememiştir. Tüm sayısal sonuçlar, karmaşıklık matrisi verileri ve sınıflandırma raporları aşağıda tablo formatında sunulmuştur. Grafikler bilgisayar tamirinden sonra eklenecektir. `python src/main.py` komutu çalıştırılarak tüm görseller yeniden üretilebilir.
+
 ## Introduction
 
 Evrişimli Sinir Ağları (Convolutional Neural Networks – CNN), görüntü sınıflandırma alanında günümüzde en başarılı derin öğrenme mimarilerinden birini oluşturmaktadır. LeCun vd. (1998) tarafından tanıtılan LeNet-5, modern CNN mimarilerinin öncüsü olup özellikle el yazısı rakam tanımada büyük başarı elde etmiştir. Sonraki yıllarda AlexNet (Krizhevsky vd., 2012), VGG (Simonyan & Zisserman, 2014) ve ResNet (He vd., 2016) gibi daha derin ve güçlü mimariler geliştirilmiş; bu modeller ImageNet yarışmalarında insan düzeyine yakın başarımlar sergilemiştir.
